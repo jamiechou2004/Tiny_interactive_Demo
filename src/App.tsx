@@ -144,11 +144,13 @@ export default function App() {
               <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-100 min-h-[200px]">
                 <motion.p 
                   animate={{ 
-                    letterSpacing: `${interference * 0.1}em`,
-                    filter: `blur(${interference * 0.2}px)`,
-                    opacity: 1 - (interference * 0.05)
+                    letterSpacing: `${interference * 0.05}em`,
+                    filter: `blur(${interference * 0.1}px)`,
+                    opacity: 1 - (interference * 0.005)
                   }}
-                  className="text-4xl md:text-5xl font-decorative text-slate-800 text-center"
+                  className={`text-4xl md:text-5xl text-slate-800 text-center transition-all duration-500 ${
+                    interference < 30 ? 'font-sans' : interference < 70 ? 'font-serif' : 'font-decorative'
+                  }`}
                 >
                   Complexity hides the pattern.
                 </motion.p>
