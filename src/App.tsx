@@ -145,42 +145,89 @@ export default function App() {
 
           <Card className="border-none shadow-sm bg-slate-50/50 mb-12">
             <CardHeader>
-              <CardTitle className="text-xl">The Effort Slider</CardTitle>
-              <CardDescription>Adjust the slider to see how decorative elements interfere with pattern recognition.</CardDescription>
+              <CardTitle className="text-xl text-center">Interference Control</CardTitle>
+              <CardDescription className="text-center">Select a level to see how decorative elements interfere with pattern recognition.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
-              <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-100 min-h-[200px]">
-                <motion.p 
-                  animate={{ 
-                    letterSpacing: `${interference * 0.05}em`,
-                    filter: `blur(${interference * 0.1}px)`,
-                    opacity: 1 - (interference * 0.005)
-                  }}
-                  className={`text-4xl md:text-5xl text-slate-800 text-center transition-all duration-500 ${
-                    interference < 30 ? 'font-sans' : interference < 70 ? 'font-serif' : 'font-decorative'
-                  }`}
-                >
-                  Complexity hides the pattern.
-                </motion.p>
-              </div>
-              <div className="max-w-md mx-auto space-y-4">
-                <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-slate-400">
-                  <span>Clean</span>
-                  <span>Interference Level: {interference}%</span>
-                  <span>Decorative</span>
+              <div className="relative flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-slate-100 min-h-[240px] overflow-hidden">
+                {/* Morphing Text Layers */}
+                <div className="relative w-full text-center">
+                  <motion.p 
+                    animate={{ 
+                      opacity: Math.max(0, 1 - interference / 40),
+                      letterSpacing: `${interference * 0.02}em`,
+                      filter: `blur(${interference * 0.05}px)`,
+                    }}
+                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                    className="text-4xl md:text-5xl text-slate-800 font-sans absolute inset-0 flex items-center justify-center"
+                  >
+                    Complexity hides the pattern.
+                  </motion.p>
+                  
+                  <motion.p 
+                    animate={{ 
+                      opacity: interference > 30 && interference < 70 ? 1 : interference <= 30 ? (interference - 10) / 20 : (90 - interference) / 20,
+                      letterSpacing: `${(interference - 50) * 0.02}em`,
+                      filter: `blur(${Math.abs(interference - 50) * 0.05}px)`,
+                    }}
+                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                    className="text-4xl md:text-5xl text-slate-800 font-serif absolute inset-0 flex items-center justify-center"
+                  >
+                    Complexity hides the pattern.
+                  </motion.p>
+
+                  <motion.p 
+                    animate={{ 
+                      opacity: Math.max(0, (interference - 60) / 40),
+                      letterSpacing: `${(interference - 100) * 0.02}em`,
+                      filter: `blur(${(100 - interference) * 0.05}px)`,
+                    }}
+                    transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                    className="text-4xl md:text-5xl text-slate-800 font-decorative absolute inset-0 flex items-center justify-center"
+                  >
+                    Complexity hides the pattern.
+                  </motion.p>
                 </div>
-                <Slider 
-                  value={[interference]} 
-                  onValueChange={(val) => setInterference(val[0])} 
-                  max={100} 
-                  step={1} 
-                />
+                
+                {/* Placeholder to maintain height */}
+                <p className="text-4xl md:text-5xl opacity-0 pointer-events-none">
+                  Complexity hides the pattern.
+                </p>
+              </div>
+
+              <div className="max-w-md mx-auto">
+                <div className="flex p-1 bg-slate-200/50 rounded-2xl relative">
+                  {[
+                    { label: 'Low', value: 0 },
+                    { label: 'Medium', value: 50 },
+                    { label: 'High', value: 100 }
+                  ].map((level) => (
+                    <button
+                      key={level.label}
+                      onClick={() => setInterference(level.value)}
+                      className={`relative z-10 flex-1 py-3 text-sm font-bold uppercase tracking-widest transition-colors duration-300 ${
+                        interference === level.value ? 'text-slate-900' : 'text-slate-400 hover:text-slate-600'
+                      }`}
+                    >
+                      {level.label}
+                    </button>
+                  ))}
+                  <motion.div
+                    className="absolute inset-y-1 bg-white rounded-xl shadow-sm z-0"
+                    initial={false}
+                    animate={{
+                      left: `${(interference / 50) * 33.33}%`,
+                      width: '33.33%'
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <Card className="border-none shadow-sm bg-white">
+            <Card className="border-none shadow-sm bg-white overflow-hidden">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Side A: Clean Font</span>
@@ -189,7 +236,13 @@ export default function App() {
                 <CardTitle className="font-sans text-2xl">Simple Instructions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="p-6 bg-slate-50 rounded-xl font-sans text-slate-700 leading-relaxed">
+                <motion.div 
+                  animate={{ 
+                    filter: `blur(${interference * 0.02}px)`,
+                    letterSpacing: `${interference * 0.005}em`
+                  }}
+                  className="p-6 bg-slate-50 rounded-xl font-sans text-slate-700 leading-relaxed"
+                >
                   <p className="font-bold mb-2">Task: Physical Alignment</p>
                   <ol className="list-decimal list-inside space-y-2">
                     <li>Stand with feet shoulder-width apart.</li>
@@ -197,7 +250,7 @@ export default function App() {
                     <li>Hold for 15 seconds.</li>
                     <li>Repeat twice.</li>
                   </ol>
-                </div>
+                </motion.div>
                 <Button 
                   onClick={() => handleTransferClick('simple')}
                   variant="secondary" 
@@ -208,7 +261,7 @@ export default function App() {
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-sm bg-white">
+            <Card className="border-none shadow-sm bg-white overflow-hidden">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Side B: Decorative Font</span>
@@ -217,7 +270,14 @@ export default function App() {
                 <CardTitle className="font-decorative text-2xl">Simple Instructions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="p-6 bg-slate-50 rounded-xl font-decorative text-2xl text-slate-700 leading-relaxed">
+                <motion.div 
+                  animate={{ 
+                    filter: `blur(${interference * 0.05}px)`,
+                    letterSpacing: `${interference * 0.01}em`,
+                    opacity: 1 - (interference * 0.002)
+                  }}
+                  className="p-6 bg-slate-50 rounded-xl font-decorative text-2xl text-slate-700 leading-relaxed"
+                >
                   <p className="font-bold mb-2">Task: Physical Alignment</p>
                   <ol className="list-decimal list-inside space-y-2">
                     <li>Stand with feet shoulder-width apart.</li>
@@ -225,7 +285,7 @@ export default function App() {
                     <li>Hold for 15 seconds.</li>
                     <li>Repeat twice.</li>
                   </ol>
-                </div>
+                </motion.div>
                 <Button 
                   onClick={() => handleTransferClick('decorative')}
                   variant="secondary" 
