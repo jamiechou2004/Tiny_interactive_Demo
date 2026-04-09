@@ -87,11 +87,19 @@ export default function App() {
                 ].map((item, i) => (
                   <motion.div
                     key={i}
-                    whileHover={{ scale: 1.05 }}
-                    className="aspect-square flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-100 shadow-sm p-4"
+                    whileHover={{ y: -4 }}
+                    className="aspect-square flex flex-col items-center justify-center bg-white rounded-2xl border border-slate-100 shadow-sm p-4 cursor-default group"
                   >
-                    <span className={`${item.font} text-6xl text-slate-800`}>A</span>
-                    <span className="text-[10px] uppercase tracking-widest text-slate-400 mt-4 font-semibold">{item.label}</span>
+                    <motion.span 
+                      whileHover={{ scale: 1.15 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                      className={`${item.font} text-6xl text-slate-800 select-none`}
+                    >
+                      A
+                    </motion.span>
+                    <span className="text-[10px] uppercase tracking-widest text-slate-400 mt-4 font-semibold opacity-60 group-hover:opacity-100 transition-opacity">
+                      {item.label}
+                    </span>
                   </motion.div>
                 ))}
               </div>
